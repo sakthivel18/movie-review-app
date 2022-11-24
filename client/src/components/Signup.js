@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -15,19 +13,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AuthApi from '../utils/AuthApi';
 import { signup } from '../services/AuthService';
 import { useState } from 'react';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const theme = createTheme();
 
@@ -93,7 +78,7 @@ export default function Signup() {
                   id="firstName"
                   label="First Name"
                   autoFocus
-                  onChange={handleChange}
+                  onChange={e => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -104,7 +89,7 @@ export default function Signup() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
-                  onChange={handleChange}
+                  onChange={e => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -115,7 +100,7 @@ export default function Signup() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  onChange={handleChange}
+                  onChange={e => handleChange(e)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -127,13 +112,7 @@ export default function Signup() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  onChange={e => handleChange(e)}
                 />
               </Grid>
             </Grid>
@@ -155,7 +134,6 @@ export default function Signup() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );
