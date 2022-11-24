@@ -5,6 +5,7 @@ import AuthApi from './utils/AuthApi';
 import RoutesProvider from './routes/RoutesProvider';
 import { useEffect } from 'react';
 import { hasLoggedIn } from './services/AuthService'
+import Navbar from './components/Navbar';
 
 function App() {
   const [auth, setAuth] = useState(false);
@@ -21,6 +22,7 @@ function App() {
     <div className="App">
       <AuthApi.Provider value={{auth, setAuth}}>
       <Router>
+          <Navbar/>
           <RoutesProvider />
         </Router>
       </AuthApi.Provider>
