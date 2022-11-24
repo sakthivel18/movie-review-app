@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,6 +14,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import AuthApi from '../utils/AuthApi';
 import { useContext } from 'react';
+import { login } from '../services/AuthService';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -50,10 +52,31 @@ const useStyles = makeStyles((theme) => ({
 export default function Login() {
   const classes = useStyles();
   const authApi = useContext(AuthApi);
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
   
-  const handleLogin = () => {
-    authApi.setAuth(true);
+  const handleChange = event => {
+    const {name, value} = event.target;
+    if (name === 'email') {
+      setEmail(value);
+    } else if (name === 'password') {
+      setPassword(value);
+    }
   }
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      authApi.setAuth(true);
+      let res = await login({email, password});
+      console.log(res.data);
+      if (res.data.auth) {
+        authApi.setAuth(true);
+      }
+    } catch (err) {
+      authApi.setAuth(false);
+    }
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -74,6 +97,7 @@ export default function Login() {
             label="Email Address"
             name="email"
             autoComplete="email"
+            onClick={handleChange}
             autoFocus
           />
           <TextField
@@ -85,6 +109,7 @@ export default function Login() {
             label="Password"
             type="password"
             id="password"
+            onClick={handleChange}
             autoComplete="current-password"
           />
           <FormControlLabel

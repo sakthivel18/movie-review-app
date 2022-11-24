@@ -12,6 +12,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import AuthApi from '../utils/AuthApi';
+import { signup } from '../services/AuthService';
+import { useState } from 'react';
 
 function Copyright(props) {
   return (
@@ -29,14 +32,37 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Signup() {
-  const handleSubmit = (event) => {
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  const handleChange = (event) => {
+    const {name, value} = event.target;
+    if (name === 'firstName') {
+      setFirstName(value);
+    } else if (name === 'lastName') {
+      setLastName(value);
+    } else if (name === 'email') {
+      setEmail(value);
+    } else if (name === 'password') {
+      setPassword(value);
+    }
+  }
+
+  const handleSignup = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+    try {
+      const res = await signup({firstName, lastName, email, password});
+      if (res.data.auth) {
+        AuthApi.setAuth(true);
+      } else {
+        AuthApi.setAuth(false);
+      }
+    } catch(err) {
+      AuthApi.setAuth(false);
+    }
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -56,7 +82,7 @@ export default function Signup() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -67,6 +93,7 @@ export default function Signup() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -77,6 +104,7 @@ export default function Signup() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -87,6 +115,7 @@ export default function Signup() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -98,6 +127,7 @@ export default function Signup() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -112,6 +142,7 @@ export default function Signup() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={handleSignup}
             >
               Sign Up
             </Button>

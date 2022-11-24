@@ -51,7 +51,6 @@ exports.signup = async (req, res) => {
 };
 
 exports.hasLoggedIn = async (req, res) => {
-    console.log(req.session.user);
     if (req.session.user) {
         return res.status(200).json({message: "You are signed in already", auth: true });
     } else {
