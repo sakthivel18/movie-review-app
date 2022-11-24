@@ -3,7 +3,7 @@ import { genres } from '../utils/AppConstants';
 import Select from 'react-select';
 import Slider from '@mui/material/Slider';
 
-const CreateMovie = () => {
+const EditMovie = () => {
     let genreOptions = genres.map(genre => {
         let option = {
             "label": genre, 
@@ -80,4 +80,4 @@ const CreateMovie = () => {
     );
 }
 
-export default CreateMovie;
+export default EditMovie;
