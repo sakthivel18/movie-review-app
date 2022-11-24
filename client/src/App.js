@@ -1,19 +1,18 @@
+import React, { useState } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import Home from './components/Home';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AuthApi from './utils/AuthApi';
+import RoutesProvider from './routes/RoutesProvider';
 
 function App() {
+  const [auth, setAuth] = useState(false);
   return (
     <div className="App">
+      <AuthApi.Provider value={{auth, setAuth}}>
       <Router>
-        <Routes>
-          <Route exact path="/" element={<Home/>} />
-          <Route exact path="/login" element={<Login/>} />
-          <Route exact path="/signup" element={<Signup/>} />
-        </Routes>
-      </Router>
+          <RoutesProvider />
+        </Router>
+      </AuthApi.Provider>
     </div>
   );
 }
