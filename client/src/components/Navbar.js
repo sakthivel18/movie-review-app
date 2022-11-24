@@ -16,7 +16,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 
 import { signOut } from '../services/AuthService';
 
-const pages = [];
+const pages = ['Add Movie'];
 
 function Navbar() {
     const authApi = React.useContext(AuthApi);
@@ -56,6 +56,7 @@ function Navbar() {
           <Typography
             variant="h6"
             noWrap
+            href='/'
             component="a"
             sx={{
               mr: 2,
@@ -100,7 +101,7 @@ function Navbar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={handleCloseNavMenu} href="/create">
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -111,7 +112,7 @@ function Navbar() {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -130,6 +131,7 @@ function Navbar() {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
+                href="/create"
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}

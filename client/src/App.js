@@ -19,11 +19,13 @@ function App() {
     readSession();
   }, [])
   return (
-    <div className="App">
+    <div>
       <AuthApi.Provider value={{auth, setAuth}}>
       <Router>
           <Navbar/>
-          <RoutesProvider />
+          <div className="page-container">
+            <RoutesProvider />
+          </div>
         </Router>
       </AuthApi.Provider>
     </div>
