@@ -4,9 +4,7 @@ const User = require('../models/user');
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log(email, password);
         const user = await User.findOne({email: email});
-        console.log(user);
         if (user) {
             const isValidPassword = await user.comparePassword(password);
             if (isValidPassword) {
@@ -36,6 +34,10 @@ exports.login = async (req, res) => {
 
 exports.signup = async (req, res) => {
     try {
+        const isEmailExists = await User.findOne({email: req.body.email});
+        if (isEmailExists) {
+            return res.json(200).json({message: "Email already exists", auth: false});
+        }
         const user = new User(req.body);
         await user.save();
         req.session.user = user._id;
