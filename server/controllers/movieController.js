@@ -1,17 +1,43 @@
 const express = require('express');
 const Movie = require('../models/movie');
+const User = require('../models/user')
 
 //Show all the Movie
 exports.allMovies= async(req,res)=>{
     try{
         const movies = await Movie.find()
         const reviews = await movies.reviews
+        let list = []
+        movies.map(value=>{
+            // list.push({...value,isUpdate:true,isDelete:true})
+            list.push(value)
+        })
+    //    console.log(list)
+        list.map(value=>{
+            console.log(value.name);
+            if(value.author == req.session.user)
+            {
+            value._doc.isDelete=true
+            value._doc.isUpdate=true
+            }
+            value.reviews.map(review=>{
+                console.log(value.reviews)
+                if(review.user == req.session.user)
+                {
+                    value._doc.isReviewDelete = true
+                }
+            })
+        })
+
+
+       
+    //    console.log(list)
         return res.status(200).json({
-            movies:movies,
+            movies:list,
             reviews:reviews
         })
-    }
 
+    }
     catch(err){
         return res.status(500).json({message:"Internal server error Couldn't retrieve"})
     }
@@ -30,6 +56,7 @@ exports.findMovie = async(req,res)=>{
         return res.status(404).json({message:"Movie of the particular ID is not found"})
     }
 }
+
 //Updating a Movie
 exports.updateMovie = async(req,res)=>{
     try{
@@ -76,9 +103,12 @@ exports.createReview = async(req,res)=>{
 
     try{
         const movie = await Movie.findById(req.body.id)
+    
+
         let user = req.session.user
+        const loggedIn = await User.findById(user)
         const review  = {
-            
+            name:loggedIn.firstName+" "+loggedIn.lastName,
             user:req.session._id,
             description:req.body
 

@@ -31,8 +31,6 @@ app.use((req, res, next) => {
   });
 app.use(express.urlencoded({ extended : true}));
 app.use(express.json());
-app.use('/user', userRoutes);
-app.use('/movies',movieRoutes);
 
 app.use(session({
     secret: 'this is a secret key',
@@ -42,3 +40,5 @@ app.use(session({
   }))
 app.use(morgan('tiny'));
 
+app.use('/user', userRoutes);
+app.use('/movies',movieRoutes);

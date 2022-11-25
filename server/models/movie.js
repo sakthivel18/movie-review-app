@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 
 const reviewSchema = mongoose.Schema(
     {
-      
+      name:{type:String},
       description: { type: String, required: true },
       user: {
        type: mongoose.Schema.Types.ObjectId,
-       required: true,
+       
        ref: 'User',
              },
      },
@@ -36,6 +36,7 @@ const movieSchema = new Schema({
 
     author:{
         type:Schema.Types.ObjectId,ref:'User'
+      
     },
     
     rating:{
