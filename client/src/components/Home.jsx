@@ -99,8 +99,8 @@ const Home = () => {
                     </FormControl>
                 </div> 
                 <div className="col-md-4">
-                    <Button variant="contained" size="large">Apply Filter</Button>
-                    <Button className="m-2" variant="outlined" size="large">clear</Button>
+                    <Button variant="contained" size="large" sx={{background:"#002d18"}}>Apply Filter</Button>
+                    <Button className="m-2" variant="outlined" sx={{color:"#002d18", borderColor:"#002d18"}} size="large">clear</Button>
                 </div>     
             </div>
             <div className="row d-flex flex-row mt-2">

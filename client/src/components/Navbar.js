@@ -49,7 +49,7 @@ function Navbar() {
   }
 
   return (
-    <AppBar position="static" color="primary">
+    <AppBar position="static" style={{background: "#002d18"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <MovieFilterRoundedIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -61,7 +61,7 @@ function Navbar() {
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              fontFamily: 'Raleway',
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
@@ -102,7 +102,7 @@ function Navbar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu} href="/create">
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography textAlign="center" sx={{fontFamily: "Raleway"}}>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -132,7 +132,7 @@ function Navbar() {
                 key={page}
                 onClick={handleCloseNavMenu}
                 href="/create"
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: 'white', display: 'block',fontFamily: 'Raleway' }}
               >
                 {page}
               </Button>
