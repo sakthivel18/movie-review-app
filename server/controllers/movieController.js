@@ -25,6 +25,7 @@ exports.allMovies= async(req,res)=>{
                 if(review.user == req.session.user)
                 {
                     value._doc.isReviewDelete = true
+                    value._doc.isLiked = true
                 }
             })
         })
@@ -48,6 +49,13 @@ exports.findMovie = async(req,res)=>{
     try{
         const id = req.params.id;
         const movie = await Movie.findById(id)
+        if (movie.author == req.session.user)
+        {
+            movie._doc.isUpdate = true
+            movie._doc.isDelete = true
+            movie._doc.isLiked = true
+            movie._doc.isReviewDelete = true
+        }
         return res.status(200).json({
             movie:movie
         })
