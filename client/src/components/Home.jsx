@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -7,12 +8,15 @@ import { useState } from 'react';
 import { genres, languages, ratings } from '../utils/AppConstants';
 import Button from '@mui/material/Button';
 import Movie from './Movie';
+import { showMovies } from '../services/MovieService';
 
 const Home = () => {
+    const navigate = useNavigate();
     const [nameFilter, setNameFilter] = useState();
     const [genreFilter, setGenreFilter] = useState();
     const [languageFilter, setLanguageFilter] = useState();
     const [ratingFilter, setRatingFilter] = useState();
+    const [movies, setMovies] = useState([]);
     const images = [
         require("../images/image1.jpg"),
         require("../images/image2.jpg"),
@@ -37,6 +41,32 @@ const Home = () => {
         "image": images[0],
         "rating": 5
     }
+
+    const fetchMovies = async () => {
+        try {
+            const res = await showMovies();
+            let { movies } = res.data;
+            movies.forEach(movie => {
+                let randomIndex = Math.floor(Math.random() * images.length);
+                movie.image = images[randomIndex];
+            });
+            setMovies(movies);
+
+        } catch(axiosError) {
+            setMovies([]);
+            let { status } = axiosError.response;
+            let { message } = axiosError.response.data;
+            let error = {
+                "status": status,
+                "message": message
+            }
+            navigate('/error', { state : { error }});
+        }
+    }
+
+    useEffect(() => {
+        fetchMovies();
+    }, []);
 
     return (
         <div className="container mt-3">
@@ -104,7 +134,7 @@ const Home = () => {
                 </div>     
             </div>
             <div className="row d-flex flex-row mt-2">
-                <Movie details={movie}></Movie>
+                { movies.length !== 0 && movies.map(it => <Movie key={Math.random()} details={it}></Movie>) }
             </div>    
         </div>
     );

@@ -68,9 +68,10 @@ exports.findMovie = async(req,res)=>{
 //Updating a Movie
 exports.updateMovie = async(req,res)=>{
     try{
-        const  id = req.params.id
-        const movieDetails = req.body
-        const movieUpdated = await Movie.findByIdAndUpdate(id,movieDetails,{useFindAndModify:false,runValidators:true})
+        console.log(req.params.id);
+        const id = req.params.id;
+        const movieDetails = req.body;
+        const movieUpdated = await Movie.findByIdAndUpdate(id, movieDetails, {useFindAndModify:false,runValidators:true});
         return res.status(200).json({message:"You have successfully Updated the Movie"})
     }
     catch(err){
@@ -94,16 +95,13 @@ exports.deleteMovie = async(req,res)=>{
 // creation of other things like assigning the user to it.
 exports.createMovie = async(req,res)=>{
     try{
-        const movie =new Movie(req.body)
-        //Need to add the user to the movie model.
+        const reqBody = {...req.body, author: req.session.user, reviews: []};
+        const movie = new Movie(reqBody);
         await movie.save();
-        return res.status(200).json({message:"Successfully Created the Movie"})
-
-        
+        return res.status(200).json({message:"Successfully Created the Movie"});
     }   
-    catch{
-        return res.status(500).json({message:"The movie couldn't be created"})
-
+    catch (err) {
+        return res.status(500).json({message:"The movie couldn't be created"});
     }
 }
 
