@@ -5,6 +5,7 @@ import AuthApi from './utils/AuthApi';
 import RoutesProvider from './routes/RoutesProvider';
 import { useEffect } from 'react';
 import { hasLoggedIn } from './services/AuthService'
+import Navbar from './components/Navbar';
 
 function App() {
   const [auth, setAuth] = useState(false);
@@ -18,10 +19,13 @@ function App() {
     readSession();
   }, [])
   return (
-    <div className="App">
+    <div>
       <AuthApi.Provider value={{auth, setAuth}}>
       <Router>
-          <RoutesProvider />
+          <Navbar/>
+          <div className="page-container">
+            <RoutesProvider />
+          </div>
         </Router>
       </AuthApi.Provider>
     </div>
