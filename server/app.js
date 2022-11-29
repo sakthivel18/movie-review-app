@@ -4,12 +4,13 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const userRoutes = require('./routes/userRoutes');
+const movieRoutes = require('./routes/movieRoutes')
 
 const app = express();
-const port = 5000;
+const port = 5001;
 const host = 'localhost';
 
-mongoose.connect('mongodb://localhost:27017/movie_reviews')
+mongoose.connect('mongodb://0.0.0.0:27017/movie_reviews')
 .then(() => {
     app.listen(port, host, () => {
         console.log('Server started and listening on port ' + port);
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
   });
 app.use(express.urlencoded({ extended : true}));
 app.use(express.json());
+
 app.use(session({
     secret: 'this is a secret key',
     resave: false,
@@ -37,5 +39,6 @@ app.use(session({
     cookie: { secure: false }
   }))
 app.use(morgan('tiny'));
-app.use('/user', userRoutes);
 
+app.use('/user', userRoutes);
+app.use('/movies',movieRoutes);
