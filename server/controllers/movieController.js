@@ -108,23 +108,22 @@ exports.createMovie = async(req,res)=>{
 exports.createReview = async(req,res)=>{
 
     try{
-        const movie = await Movie.findById(req.body.id)
-    
-
-        let user = req.session.user
-        const loggedIn = await User.findById(user)
+        const movie = await Movie.findById(req.body.id);
+        let user = req.session.user;
+        const loggedIn = await User.findById(user);
         const review  = {
             name:loggedIn.firstName+" "+loggedIn.lastName,
-            user:req.session._id,
-            description:req.body
-
+            user:req.session.user,
+            description:req.body.reviewText,
+            likedBy: {}
         }
-        movie.reviews.push(review)
-        await movie.save()
-        return res.status(200).json({message:"The review has been added successfully"})
+        movie.reviews.push(review);
+        await movie.save();
+        return res.status(200).json({message:"The review has been added successfully"});
 
     }
-    catch{
+    catch (err) {
+        console.log(err);
         return res.status(500).json({message:"Couldn't add the review"})
     }
 }

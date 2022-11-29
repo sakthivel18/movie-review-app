@@ -8,7 +8,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from "./Alert";
-import { showMovie, deleteMovie } from "../services/MovieService";
+import { showMovie, deleteMovie, addReview, deleteReview } from "../services/MovieService";
 
 const MovieDetails = () => {
     const navigate = useNavigate();
@@ -19,6 +19,7 @@ const MovieDetails = () => {
         message: '',
         severity: 'error'
     });
+    const [reviewText, setReviewText] = useState('');
     
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -101,6 +102,50 @@ const MovieDetails = () => {
         });
     }
 
+    const handleAddReview = async () => {
+        try {
+            const res = await addReview({
+                id: movie._id,
+                reviewText
+            });
+            if (res.status === 200) {
+                await setSnackbar({
+                    open: true,
+                    message: 'Review added successfully',
+                    severity: 'success'
+                });
+                fetchMovie();
+            }
+        } catch (err) {
+            await setSnackbar({
+                open: true,
+                message: 'Unable to add review',
+                severity: 'error'
+            });
+        }
+    }
+
+    const handleDeleteReview = async (review) => {
+        try {
+            const res = await deleteReview(review);
+            if (res.status === 200) {
+                await setSnackbar({
+                    open: true,
+                    message: 'Unable to delete review',
+                    severity: 'error'
+                });
+            }
+            fetchMovie();
+        } catch (err) {
+            await setSnackbar({
+                open: true,
+                message: 'Unable to delete review',
+                severity: 'error'
+            });
+        }
+    }
+
+
     useEffect(() => {
         fetchMovie();
     }, []);
@@ -145,6 +190,32 @@ const MovieDetails = () => {
                     </div>
                 </div>
             </div>
+            <div className="row" >
+                <div className="col-md-2"></div>
+                <div className="col-md-8">
+                    <div className="card p-2">
+                        <div className="card-header" style={{backgroundColor: '#ffffff'}}>
+                            <h6> Add Review </h6>
+                        </div> 
+                        <div className="card-body">
+                            <form>
+                                <div className="form-group row">
+                                    <textarea className="form-control" onChange={e => setReviewText(e.target.value)} style={{minHeight: '10rem'}}></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div className="card-footer" style={{backgroundColor: '#ffffff'}}>
+                            <div className="row flex">
+                                <div className="col-md-11"></div>
+                                <div className="col-md-1">
+                                    <button className="btn btn-primary" onClick={handleAddReview}>Post</button>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className="row">
                 <div className="col-md-2"></div>
                 <div className="col-md-8">
@@ -154,25 +225,35 @@ const MovieDetails = () => {
                                 <div className="col-md-10">
                                     <h6 className='mt-2'>Reviews</h6>
                                 </div>
-                                <div className="col-md-2"><Button>Add review</Button> </div>
                             </div>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="col-md-10">
-                                        <div className="row" style={{fontWeight: 'bold'}}> Author: </div>
-                                        <div className="row" style={{fontWeight: 'bold'}}> Posted on: </div> 
-                                        <div className="row"> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
-                                        </div>
-                                        <div className="col-md-2 d-flex">
-                                            <Button sx={{color:"#ff1a1a", borderColor:"#000000"}} size="small"> <FavoriteIcon/> </Button>
-                                            <Button sx={{color:"#000000", borderColor:"#000000"}} size="small"> <DeleteIcon/> </Button>
+                            {
+                                movie != null && movie.reviews.length !== 0 && movie.reviews.map(review => 
+                                    <li class="list-group-item">
+                                    <div className="card-body">
+                                        <div className="row">
+                                            <div className="col-md-10">
+                                            <div className="row" style={{fontWeight: 'bold'}}> Author: {review.name}</div>
+                                            <div className="row" style={{fontWeight: 'bold'}}> Posted on: {new Date(review.createdAt).toLocaleDateString()}</div> 
+                                            <div className="row"> {review.description} </div>
+                                            </div>
+                                            {review.isLiked && <div className="col-md-2 d-flex">
+                                                <Button sx={{color:"#ff1a1a", borderColor:"#000000"}} size="small"> <FavoriteIcon/> </Button>
+                                                <Button sx={{color:"#000000", borderColor:"#000000"}} size="small"> <DeleteIcon/> </Button>
+                                            </div>}
                                         </div>
                                     </div>
+                                </li>     
+                                )
+                            }
+                            {
+                                movie != null && movie.reviews.length === 0 && <li class="list-group-item">
+                                <div className="card-body">
+                                    <h6 className='mt-2'>No reviews yet</h6>
                                 </div>
-                            </li>
+                                </li>
+                            }
                         </ul>
                     </div>
                 </div>
