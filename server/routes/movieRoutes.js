@@ -16,6 +16,10 @@ router.put('/update/:id',controller.updateMovie)
 router.delete('/delete/:id',controller.deleteMovie)
 router.post('/review/',controller.createReview)
 router.delete('/review/delete',controller.deleteReview)
+
+//Filter 
+router.post('/filter',controller.filter)
+
 // router.post('/login', controller.login);
 // router.post('/signup', controller.signup);
 // router.get('/hasLoggedIn', controller.hasLoggedIn);

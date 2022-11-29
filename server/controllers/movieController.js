@@ -1,4 +1,5 @@
 const express = require('express');
+const movie = require('../models/movie');
 const Movie = require('../models/movie');
 const User = require('../models/user')
 
@@ -8,6 +9,7 @@ exports.allMovies= async(req,res)=>{
         const movies = await Movie.find()
         const reviews = await movies.reviews
         let list = []
+        //
         movies.map(value=>{
             // list.push({...value,isUpdate:true,isDelete:true})
             list.push(value)
@@ -135,4 +137,17 @@ exports.deleteReview = async(req,res)=>{
     catch{
         return res.status(401).json({message:"The review has not been found"})
     }
+}
+
+
+
+
+exports.filter = async(req,res)=>{
+    const sortby = req.body.sort
+    const genre = req.body.genre
+    const ratingby = req.body.rating
+    console.log(req.body)
+    const movies = await Movie.find({rating:{$gt:ratingby},genre:genre}).sort({name:sortby})
+    console.log(movies)
+    return res.status(200).json({movies:movies,message:"The filtered data"})
 }
