@@ -1,6 +1,6 @@
 const express = require('express');
 const Movie = require('../models/movie');
-const User = require('../models/user')
+const User = require('../models/user');
 
 //Show all the Movie
 exports.allMovies= async(req,res)=>{
@@ -48,14 +48,13 @@ exports.allMovies= async(req,res)=>{
 exports.findMovie = async(req,res)=>{
     try{
         const id = req.params.id;
-        const movie = await Movie.findById(id)
-        if (movie.author == req.session.user)
-        {
-            movie._doc.isUpdate = true
-            movie._doc.isDelete = true
-            movie._doc.isLiked = true
-            movie._doc.isReviewDelete = true
-        }
+        const movieDoc = await Movie.findById(id)
+        const movie = movieDoc.toObject();
+        movie.isAuthor = movie.author == req.session.user;
+        movie.reviews.forEach(review => {
+            review.isLiked = review.likedBy.get(req.session.user) !== undefined;
+            review.isAuthor = review.user == req.session.user;
+        });
         return res.status(200).json({
             movie:movie
         })
@@ -123,16 +122,53 @@ exports.createReview = async(req,res)=>{
 
     }
     catch (err) {
-        console.log(err);
         return res.status(500).json({message:"Couldn't add the review"})
     }
 }
 exports.deleteReview = async(req,res)=>{
-    try{
-        const movie = await Movie.reviews.findByIdAndDelete(req.body.id)
-        return res.status(200).json({message:"The movie has been deleted successgfully"})
+    try {
+        const movie = await Movie.findOne({
+            reviews: {
+                $elemMatch: {
+                    _id: req.params.id
+                }
+            }
+        });
+        if (!movie) return res.status(400).json({ 'message' : 'Internal server error - cannot delete the trade' });
+        const index = movie.reviews.findIndex(review => review._id = req.params.id);
+        movie.reviews.splice(index, 1);
+        await movie.save();
+        return res.status(200).json({message:"The review has been deleted successgfully"})
      }
-    catch{
+    catch (err) {
+        console.log(err);
         return res.status(401).json({message:"The review has not been found"})
     }
+}
+
+exports.likeDislikeReview = async (req, res) => {
+    try {
+        const movie = await Movie.findOne({
+            reviews: {
+                $elemMatch: {
+                    _id: req.body.id
+                }
+            }
+        });
+        if (!movie) res.status(400).json({message:"Unable to like/dislike review"});;
+        let index = movie.reviews.findIndex(review => review._id == req.body.id);
+        const user = req.session.user.toString();
+        if (movie.reviews[index].likedBy.get(user)) {
+            movie.reviews[index].likedBy.delete(user);
+            await movie.save();
+        } else {
+            movie.reviews[index].likedBy.set(user, '1');
+            await movie.save();
+        }
+        return res.status(200).json({message: "success"});
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({message:"Unable to like/dislike review"});
+    }
+    
 }

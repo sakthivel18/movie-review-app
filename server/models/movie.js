@@ -13,7 +13,7 @@ const reviewSchema = mongoose.Schema(
              },
         likedBy:{
             type: Map,
-            of: mongoose.Schema.Types.ObjectId,
+            of: String,
             ref:'User'
         }
      },

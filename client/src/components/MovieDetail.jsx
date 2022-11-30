@@ -8,7 +8,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from "./Alert";
-import { showMovie, deleteMovie, addReview, deleteReview } from "../services/MovieService";
+import { showMovie, deleteMovie, addReview, deleteReview, likeDislikeReview } from "../services/MovieService";
 
 const MovieDetails = () => {
     const navigate = useNavigate();
@@ -104,6 +104,14 @@ const MovieDetails = () => {
 
     const handleAddReview = async () => {
         try {
+            if (!reviewText || reviewText.length === 0) {
+                await setSnackbar({
+                    open: true,
+                    message: 'Please enter a review',
+                    severity: 'error'
+                });
+                return;
+            }
             const res = await addReview({
                 id: movie._id,
                 reviewText
@@ -127,12 +135,12 @@ const MovieDetails = () => {
 
     const handleDeleteReview = async (review) => {
         try {
-            const res = await deleteReview(review);
+            const res = await deleteReview(review._id);
             if (res.status === 200) {
                 await setSnackbar({
                     open: true,
-                    message: 'Unable to delete review',
-                    severity: 'error'
+                    message: 'Review deleted successfully',
+                    severity: 'success'
                 });
             }
             fetchMovie();
@@ -145,6 +153,11 @@ const MovieDetails = () => {
         }
     }
 
+    const handleLikeDislike = async (review) => {
+        console.log(review._id);
+        await likeDislikeReview({id: review._id});
+        fetchMovie();
+    }
 
     useEffect(() => {
         fetchMovie();
@@ -158,7 +171,7 @@ const MovieDetails = () => {
                     <div className="row">
                         <div className="col-md-12">
                             <h3>Movie Details
-                            {movie?.isDelete && <span style={{float: 'right'}}>
+                            {movie?.isAuthor && <span style={{float: 'right'}}>
                                 <Button size="large" variant="outlined" sx={{color:"#000000", borderColor:"#000000"}} onClick={handleEditMovie}><ModeEditOutlineIcon/></Button>
                                 <Button className="m-2" variant="outlined" sx={{color:"#ff1a1a", borderColor:"#000000"}} size="large" onClick={handleDeleteMovie}> <DeleteIcon/> </Button>
                             </span>}
@@ -229,7 +242,7 @@ const MovieDetails = () => {
                         </div>
                         <ul class="list-group list-group-flush">
                             {
-                                movie != null && movie.reviews.length !== 0 && movie.reviews.map(review => 
+                                movie != null && movie.reviews.length !== 0 && movie.reviews.map((review) => 
                                     <li class="list-group-item">
                                     <div className="card-body">
                                         <div className="row">
@@ -238,10 +251,10 @@ const MovieDetails = () => {
                                             <div className="row" style={{fontWeight: 'bold'}}> Posted on: {new Date(review.createdAt).toLocaleDateString()}</div> 
                                             <div className="row"> {review.description} </div>
                                             </div>
-                                            {review.isLiked && <div className="col-md-2 d-flex">
-                                                <Button sx={{color:"#ff1a1a", borderColor:"#000000"}} size="small"> <FavoriteIcon/> </Button>
-                                                <Button sx={{color:"#000000", borderColor:"#000000"}} size="small"> <DeleteIcon/> </Button>
-                                            </div>}
+                                            <div className="col-md-2 d-flex">
+                                                <Button sx={{color:"#ff1a1a", borderColor:"#000000"}} size="small" onClick={() => handleLikeDislike(review)}>{ review.isLiked ? <FavoriteIcon/> : <FavoriteBorderIcon/> }  </Button>
+                                                {review.isAuthor && <Button sx={{color:"#000000", borderColor:"#000000"}} size="small" onClick={() => handleDeleteReview(review)}> <DeleteIcon/> </Button>}
+                                            </div>
                                         </div>
                                     </div>
                                 </li>     

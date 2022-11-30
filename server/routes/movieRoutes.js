@@ -15,10 +15,7 @@ router.post('/create',controller.createMovie)
 router.put('/update/:id',controller.updateMovie)
 router.delete('/delete/:id',controller.deleteMovie)
 router.post('/review/',controller.createReview)
-router.delete('/review/delete',controller.deleteReview)
-// router.post('/login', controller.login);
-// router.post('/signup', controller.signup);
-// router.get('/hasLoggedIn', controller.hasLoggedIn);
-// router.get('/signOut', controller.signOut);
+router.delete('/review/delete/:id',controller.deleteReview)
+router.post('/likeDislikeReview', controller.likeDislikeReview)
 
 module.exports = router;
