@@ -172,3 +172,24 @@ exports.likeDislikeReview = async (req, res) => {
     }
     
 }
+
+exports.filter = async(req,res)=>{
+    try {
+        const sortby = req.body.sort
+    const genre = req.body.genre
+    const ratingby = req.body.rating
+    console.log(req.body)
+    let query = {};
+    if (ratingby) query.rating = {$gt:ratingby};
+    if (genre) query.genre = genre;
+    if (!sortby) sortby = 1;
+    const movies = await Movie.find(query).sort({name:sortby})
+    console.log(movies)
+    return res.status(200).json({movies:movies,message:"The filtered data"})
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({movies:movies,message:"no data"})
+    }
+    
+}
+

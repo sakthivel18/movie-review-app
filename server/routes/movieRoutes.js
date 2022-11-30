@@ -17,5 +17,7 @@ router.delete('/delete/:id',controller.deleteMovie)
 router.post('/review/',controller.createReview)
 router.delete('/review/delete/:id',controller.deleteReview)
 router.post('/likeDislikeReview', controller.likeDislikeReview)
+router.post('/filter',controller.filter)
+
 
 module.exports = router;

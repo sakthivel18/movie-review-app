@@ -1,4 +1,4 @@
-const genres = [
+let genres = [
     "Action",
     "Adventure",
     "Animated",
@@ -51,10 +51,15 @@ const ratings = [
     {label: 'Greater than 5', value: 5},
 ]
 
+const names = [
+    {label: 'Sort Ascending (A to Z)', value: 1},
+    {label: 'Sort Descending (Z to A)', value: -1},
+]
 
 export {
     genres,
     languages,
-    ratings
+    ratings,
+    names
 }
 

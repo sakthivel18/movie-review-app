@@ -16,7 +16,7 @@ const CreateMovie = () => {
     const [description, setDescription] = useState();
     const [director, setDirector] = useState();
     const [genre, setGenre] = useState();
-    const [rating, setRating] = useState();
+    const [rating, setRating] = useState(3);
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',

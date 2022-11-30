@@ -9,7 +9,7 @@ const editMovie = movie => axios.put(url + "/movies/update/" + movie._id, movie,
 const addReview = review => axios.post(url + "/movies/review", review, {withCredentials: true});
 const deleteReview = id => axios.delete(url + "/movies/review/delete/" + id, {withCredentials: true});
 const likeDislikeReview = reqBody => axios.post(url + "/movies/likeDislikeReview", reqBody, {withCredentials: true});
-
+const filterMovies = reqBody => axios.post(url + "/movies/filter", reqBody, {withCredentials: true});
 export {
     createMovie,
     showMovies,
@@ -18,5 +18,6 @@ export {
     editMovie,
     addReview,
     deleteReview,
-    likeDislikeReview
+    likeDislikeReview,
+    filterMovies
 }
