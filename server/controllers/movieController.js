@@ -188,7 +188,7 @@ exports.filter = async(req,res)=>{
     return res.status(200).json({movies:movies,message:"The filtered data"})
     } catch(err) {
         console.log(err);
-        return res.status(500).json({movies:movies,message:"no data"})
+        return res.status(500).json({message:"no data"})
     }
     
 }
