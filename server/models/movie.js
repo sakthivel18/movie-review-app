@@ -5,14 +5,15 @@ const Schema = mongoose.Schema;
 const reviewSchema = mongoose.Schema(
     {
       name:{type:String},
-      description: { type: String, required: true },
+      description: { type: String},
       user: {
        type: mongoose.Schema.Types.ObjectId,
        
        ref: 'User',
              },
         likedBy:{
-            type:mongoose.Schema.Types.ObjectId,
+            type: Map,
+            of: String,
             ref:'User'
         }
      },
@@ -55,9 +56,7 @@ const movieSchema = new Schema({
     },
 
     reviews:[reviewSchema],
-    //array of objects ->author,comment(author's)
-    likedby:{type:Schema.Types.ObjectId,ref:'User'}//set of author's put the user id inside it 
-
+    //array of objects ->author,comment(author's)    
     
 }, {timestamps: true});
 

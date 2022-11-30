@@ -40,8 +40,8 @@ function Navbar() {
 
   const handleLogout = async () => {
     const res = await signOut();
-    handleCloseUserMenu();
-    authApi.setAuth(res.data.auth);
+    await handleCloseUserMenu();
+    await authApi.setAuth(res.data.auth);
   }
 
   const handleProfile = async() => {
@@ -64,7 +64,7 @@ function Navbar() {
               fontFamily: 'Raleway',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
+              color: 'white',
               textDecoration: 'none',
             }}
           >
@@ -78,7 +78,7 @@ function Navbar() {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              color="white"
             >
               <MenuIcon />
             </IconButton>
@@ -120,7 +120,7 @@ function Navbar() {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
+              color: 'white',
               textDecoration: 'none',
             }}
           >
