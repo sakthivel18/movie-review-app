@@ -52,8 +52,9 @@ const Home = () => {
 
         } catch(axiosError) {
             setMovies([]);
-            let { status } = axiosError.response;
-            let { message } = axiosError.response.data;
+            if (!axiosError || !axiosError.response) return;
+            let { status } = axiosError?.response;
+            let { message } = axiosError?.response?.data;
             let error = {
                 "status": status,
                 "message": message
